@@ -122,7 +122,6 @@ resource "aws_lambda_function" "finops_sentinel" {
 
   environment {
     variables = {
-      AWS_REGION         = var.aws_region
       TELEGRAM_BOT_TOKEN = var.telegram_bot_token
       TELEGRAM_CHAT_ID   = var.telegram_chat_id
     }

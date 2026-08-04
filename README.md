@@ -14,26 +14,28 @@ An enterprise-grade, zero-dependency serverless FinOps sentinel designed for AWS
 
 ```mermaid
 flowchart TD
-    subgraph Scheduling ["⏰ Automation Layer"]
-        EB["Amazon EventBridge Cron Trigger<br/><i>cron(0 9 * * ? *)</i>"]
-    Compute ["⚡ Compute Layer"]
-        Lambda["AWS Lambda Function<br/><b>python3.12</b><br/><i>Zero-Dependency (urllib)</i>"]
+    subgraph Automation ["⏰ Automation Layer"]
+        EB["Amazon EventBridge Cron Trigger (09:00 UTC)"]
+    end
+
+    subgraph Compute ["⚡ Compute Layer"]
+        Lambda["AWS Lambda Function (Python 3.12 - urllib)"]
     end
 
     subgraph AWS_APIs ["☁️ AWS Infrastructure Scanners"]
-        EC2_EBS["EC2 API<br/>• Unattached EBS Volumes<br/>• Unattached Elastic IPs<br/>• Stopped Instances"]
-        CW_Billing["CloudWatch API (us-east-1)<br/>• EstimatedCharges Metric"]
+        EC2_EBS["EC2 API (Unattached EBS, EIP, Stopped EC2)"]
+        CW_Billing["CloudWatch API (us-east-1 EstimatedCharges)"]
     end
 
-    subgraph Notification ["📱 Alerting Layer"]
-        Telegram["Telegram Bot API<br/><i>sendMessage (HTML)</i>"]
-        User["👨‍💻 DevOps / FinOps Team"]
+    subgraph Alerting ["📱 Alerting Layer"]
+        Telegram["Telegram Bot API"]
+        User["DevOps / FinOps Team"]
     end
 
-    EB -->|Invoke Daily 09:00 UTC| Lambda
+    EB -->|Invoke Daily| Lambda
     Lambda -->|boto3 scan| EC2_EBS
     Lambda -->|boto3 billing query| CW_Billing
-    Lambda -->|HTTPS POST via urllib| Telegram
+    Lambda -->|HTTPS POST| Telegram
     Telegram -->|Deliver Alert| User
 ```
 

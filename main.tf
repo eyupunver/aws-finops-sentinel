@@ -38,7 +38,7 @@ data "archive_file" "lambda_zip" {
 # IAM Execution Role & Security Policies (Least Privilege)
 # ---------------------------------------------------------------------------
 resource "aws_iam_role" "lambda_exec" {
-  name = "aws_finops_sentinel_execution_role"
+  name = "aws_finops_sentinel_execution_role_v2"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -55,7 +55,7 @@ resource "aws_iam_role" "lambda_exec" {
 }
 
 resource "aws_iam_policy" "sentinel_permissions" {
-  name        = "aws_finops_sentinel_policy"
+  name        = "aws_finops_sentinel_policy_v2"
   description = "Least privilege read-only policy for scanning unused EC2/EBS/EIP resources and CloudWatch billing"
 
   policy = jsonencode({
@@ -102,7 +102,7 @@ resource "aws_iam_role_policy_attachment" "sentinel_policy_attach" {
 # CloudWatch Log Group for Lambda Retention
 # ---------------------------------------------------------------------------
 resource "aws_cloudwatch_log_group" "lambda_logs" {
-  name              = "/aws/lambda/aws-finops-waste-sentinel"
+  name              = "/aws/lambda/aws-finops-waste-sentinel-v2"
   retention_in_days = 14
 }
 
@@ -110,7 +110,7 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
 # AWS Lambda Function Definition
 # ---------------------------------------------------------------------------
 resource "aws_lambda_function" "finops_sentinel" {
-  function_name    = "aws-finops-waste-sentinel"
+  function_name    = "aws-finops-waste-sentinel-v2"
   description      = "Scans AWS infrastructure for waste (unattached EBS/EIP, stopped EC2) and posts billing summaries to Telegram."
   runtime          = "python3.12"
   handler          = "lambda_function.lambda_handler"
